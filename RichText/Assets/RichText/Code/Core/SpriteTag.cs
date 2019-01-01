@@ -87,7 +87,18 @@ namespace SDGame.UI.RichText
 //                     height = _richText.fontSize;
                 _size.y = height;
             }
-
+            else if(key == "start")
+            {
+                int start = 0;
+                int.TryParse(val, out start);
+                _startFrame = start;
+            }
+            else if(key == "end")
+            {
+                int end = 0;
+                int.TryParse(val, out end);
+                _endFrame = end;
+            }
 //            else if (key == "width")
 //            {
 //                float width;
@@ -115,6 +126,7 @@ namespace SDGame.UI.RichText
 
         public void SetName (string name)
         {
+            SetAniName(name);
             _name = name;
         }
 
@@ -189,18 +201,42 @@ namespace SDGame.UI.RichText
             return _atlas;
         }
 
+
+        public int GetStartFrame()
+        {
+            return _startFrame;
+        }
+
+        public int GetEndFrame()
+        {
+            return _endFrame;
+        }
+        public string GetAniName()
+        {
+            return _AniName;
+        }
+        public void SetAniName(string name)
+        {
+            _AniName = name;
+        }
         private RichText _richText;
         private UIAtlas  _atlas;
 
         private string _name;
+        private string _AniName;
         private int _vertexIndex;
 
         private Vector2 _size;
         private float _offset = 0;
 
+        private int _startFrame = 0;
+        private int _endFrame = 0;
+
         private float _fillAmount = 1.0f;
         private FillMethod _fillMethod = FillMethod.None;
         private static readonly string _spriteTagPattern = @"<quad(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\/>";
         private static readonly Regex _spriteTagRegex = new Regex(_spriteTagPattern, RegexOptions.Singleline);
+
+        public int PlayerCurrentFrame = 0;
     }
 }

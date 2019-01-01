@@ -43,7 +43,7 @@ namespace SDGame.UI.RichText
             base.OnEnable();
         }
         private IEnumerator _CoUpdateSprite()
-        {
+        {                       
             while (true)
             {
                 yield return waitFrame;
@@ -53,11 +53,13 @@ namespace SDGame.UI.RichText
                 for (int i = 0; i < count; ++i)
                 {
                     var tag = tags[i];
-
-                    var atlas = tag.GetAtlas();
-                    var sprites = atlas.GetSprites();
-                    var sprite = sprites[UnityEngine.Random.Range(0, sprites.Length)];
-                    tag.SetName(sprite.name);
+                    int frameLength = tag.GetEndFrame() - tag.GetStartFrame();
+                    tag.PlayerCurrentFrame = (tag.PlayerCurrentFrame++) % (frameLength) + tag.GetEndFrame();
+//                     var atlas = tag.GetAtlas();
+//                     var sprites = atlas.GetSprites();
+//                     var sprite = sprites[UnityEngine.Random.Range(0, sprites.Length)];
+                    string spriteName = string.Format("{0}_{1}", tag.GetName(), tag.PlayerCurrentFrame);
+                    tag.SetAniName(spriteName);
 
                     SetVerticesDirty();
                 }

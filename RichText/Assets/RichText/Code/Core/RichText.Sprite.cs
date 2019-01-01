@@ -36,7 +36,7 @@ namespace SDGame.UI.RichText
             for (int i = 0; i < count; i++)
             {
                 SpriteTag spriteTag = spriteTags[i];
-                var name = spriteTag.GetName();
+                var name = spriteTag.GetAniName();
                 var atlas = spriteTag.GetAtlas();
                 if (string.IsNullOrEmpty(name) || null == atlas)
                 {
