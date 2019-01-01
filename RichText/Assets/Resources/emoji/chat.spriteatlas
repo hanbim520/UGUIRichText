@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: chat
+  m_EditorData:
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 1024
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingParameters:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 46d31d02d9df751468afb50b96620bc3, type: 3}
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 087864b24f5273f4b9f8289232e2f7f7, type: 3}
+  - {fileID: 21300000, guid: d42f12586f0a149499ffa7e5dfa85994, type: 3}
+  - {fileID: 21300000, guid: 8a3dbf40063ca964880862ec42ac8455, type: 3}
+  - {fileID: 21300000, guid: d504c0fb276558f4785f2a85a4faa0b1, type: 3}
+  - {fileID: 21300000, guid: b065c0bee963df14a822e87c83453e50, type: 3}
+  - {fileID: 21300000, guid: e9cd6a0efd49c3b4894c4d5d982a6901, type: 3}
+  - {fileID: 21300000, guid: 1ad41b9903c5247428d8ce9351c8fbed, type: 3}
+  - {fileID: 21300000, guid: 2ea927c6efb3d4a4eae7544963adc4e7, type: 3}
+  - {fileID: 21300000, guid: 6cd770d3d0b80d34b88106e5c9bc9174, type: 3}
+  - {fileID: 21300000, guid: fa5323dd21d00b94fab26a79eb16e689, type: 3}
+  - {fileID: 21300000, guid: a378aec6ef0765b4b96589ed946cb1d0, type: 3}
+  - {fileID: 21300000, guid: 9fa40c38b056732478da3f04815573db, type: 3}
+  - {fileID: 21300000, guid: 4a30e8362959cf84fa4aa876dfe39f0b, type: 3}
+  - {fileID: 21300000, guid: 3e54fb4e1bc51934a89c498ba76378b9, type: 3}
+  - {fileID: 21300000, guid: efadf6b8a77658d438790a16ec446166, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - face_9
+  - face_8
+  - face_1
+  - face_3
+  - face_2
+  - face_5
+  - face_4
+  - face_7
+  - face_6
+  - face_10
+  - face_11
+  - face_12
+  - face_13
+  - face_14
+  - face_15
+  m_Tag: chat
+  m_IsVariant: 0

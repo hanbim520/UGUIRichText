@@ -1,0 +1,14 @@
+syntax: glob
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.booproj
