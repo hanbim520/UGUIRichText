@@ -216,7 +216,7 @@ namespace SDGame.UI.RichText
                 }
 
             //    hrefInfo.Boxes.Add(rect);
-                Debug.Log("lineCount： " + lineCount);
+            //    Debug.Log("lineCount： " + lineCount);
             }
         }
 

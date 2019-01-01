@@ -8,19 +8,19 @@ namespace SDGame.UI
 {
     public class UIAtlas : IDisposable
     {
+        public int Reference = 0;
         public UIAtlas (SpriteAtlas spriteAtlas)
         {
             if (null == spriteAtlas)
             {
                 throw new ArgumentNullException("spriteAtlas is null.");
             }
-
+            Reference++;
             _spriteAtlas = spriteAtlas;
         }
 
         ~UIAtlas ()
         {
-            _DoDispose(false);
         }
 
         public void Dispose ()
@@ -30,83 +30,51 @@ namespace SDGame.UI
                 return;
             }
 
-            try
-            {
-                _DoDispose(true);
-            }
-            finally
-            {
-                GC.SuppressFinalize(this);
-                _isDisposed = true;
-            }
+            GC.SuppressFinalize(this);
+            _isDisposed = true;
         }
 
-        private void _DoDispose (bool isManualDisposing)
-        {
-            if (null != _sprites)
-            {
-                foreach (var sprite in _sprites)
-                {
-                    GameObject.Destroy(sprite);
-                }
-
-                _sprites = null;
-            }
-
-            _spritesTable = null;
-        }
 
         public Sprite GetSprite (string name)
         {
-            _CheckInit();
             name = name ?? string.Empty;
-            var sprite = _spritesTable[name] as Sprite;
-            return sprite;
+            Sprite[] allSpts = GetSprites();
+            for(int i = 0;i < allSpts.Length;++i)
+            {
+                if(allSpts[i].name == name)
+                {
+                    return allSpts[i];
+                }
+            }
+           // var sprite = _spriteAtlas.GetSprite(name);
+            return null;
         }
 
         public Sprite[] GetSprites ()
         {
-            _CheckInit();
+            if (_sprites == null)
+            {
+                _sprites = new Sprite[_spriteAtlas.spriteCount];
+                _spriteAtlas.GetSprites(_sprites);
+                for (int i = 0; i < _sprites.Length; ++i)
+                {
+                    _sprites[i].name = _sprites[i].name.Replace("(Clone)", "");
+                }
+            }
+
             return _sprites;
         }
 
         public Texture GetTexture ()
         {
-            _CheckInit();
+            _texture = GetSprites()[0].texture;
             return _texture;
-        }
-
-        private void _CheckInit ()
-        {
-            if (null != _spritesTable || _isDisposed)
-            {
-                return;
-            }
-
-            var count = _spriteAtlas.spriteCount;
-            _sprites = new Sprite[count];
-            _spriteAtlas.GetSprites(_sprites);
-
-            _spritesTable = new Hashtable(count);
-            _texture = _sprites[0].texture;
-
-            for (int i= 0; i< count; ++i)
-            {
-                var sprite = _sprites[i];
-                var name = sprite.name;
-                // remove the "(Clone)" ending text.
-                name = name.Substring(0, name.Length - 7);
-                sprite.name = name;
-
-                _spritesTable[name] = sprite;
-            }
         }
 
         private SpriteAtlas _spriteAtlas;
         private bool _isDisposed;
 
         private Sprite[]    _sprites;
-        private Hashtable   _spritesTable;
         private Texture _texture;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 namespace SDGame.UI.RichText
@@ -10,8 +11,26 @@ namespace SDGame.UI.RichText
     [ExecuteInEditMode]
     public partial class RichText : Text, IPointerClickHandler
     {
+        [SerializeField]
+        private SpriteAtlas[] m_Atlas;
+
         private VertexHelper mVertexHelperRef;
         private Font mFont;
+
+        private WaitForSeconds waitFrame = new WaitForSeconds(0.33f);
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if(m_Atlas != null )
+            {
+                for(int i =0;i < m_Atlas.Length;++i)
+                {
+                    UIAtlasManager.Instance.Add(m_Atlas[i].name, m_Atlas[i]);
+                }
+            }
+        }
+
         protected override void OnEnable()
         {
             this.supportRichText = true;
@@ -20,7 +39,34 @@ namespace SDGame.UI.RichText
             _ParseText();
             SetVerticesDirty();
 
+            StartCoroutine(_CoUpdateSprite());
             base.OnEnable();
+        }
+        private IEnumerator _CoUpdateSprite()
+        {
+            while (true)
+            {
+                yield return waitFrame;
+
+                var tags = GetSpriteTags();
+                var count = tags.Count;
+                for (int i = 0; i < count; ++i)
+                {
+                    var tag = tags[i];
+
+                    var atlas = tag.GetAtlas();
+                    var sprites = atlas.GetSprites();
+                    var sprite = sprites[UnityEngine.Random.Range(0, sprites.Length)];
+                    tag.SetName(sprite.name);
+
+                    SetVerticesDirty();
+                }
+            }
+        }
+
+        private void Update()
+        {
+            
         }
 
         protected override void OnDisable()
@@ -33,6 +79,14 @@ namespace SDGame.UI.RichText
             var manager = MaterialManager.Instance;
             var lastSpriteTexture = manager.GetSpriteAtlas(material);
             manager.DetachTexture(this, lastSpriteTexture);
+
+            if (m_Atlas != null)
+            {
+                for (int i = 0; i < m_Atlas.Length; ++i)
+                {
+                    UIAtlasManager.Instance.Remove(m_Atlas[i].name);
+                }
+            }
 
             base.OnDestroy();
         }

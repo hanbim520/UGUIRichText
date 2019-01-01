@@ -22,6 +22,7 @@ namespace SDGame.UI.RichText
             var serializedObject = this.serializedObject;
             m_Text = serializedObject.FindProperty("m_Text");
             m_FontData = serializedObject.FindProperty("m_FontData");
+            m_Atlas = serializedObject.FindProperty("m_Atlas");
 
             _lpfnParseText = System.Delegate.CreateDelegate(typeof(Action), serializedObject.targetObject, "_ParseText") as Action;
         }
@@ -44,13 +45,14 @@ namespace SDGame.UI.RichText
 
             EditorGUILayout.PropertyField(m_Text);
             EditorGUILayout.PropertyField(m_FontData);
+            EditorGUILayout.PropertyField(m_Atlas,true);
             AppearanceControlsGUI();
             RaycastControlsGUI();
             serializedObject.ApplyModifiedProperties();
 
 //            DrawDefaultInspector();
         }
-
+        private SerializedProperty m_Atlas;
         private SerializedProperty m_Text;
         private SerializedProperty m_FontData;
 

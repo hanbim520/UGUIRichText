@@ -12,8 +12,14 @@ namespace SDGame.UI.RichText
             {
                 return;
             }
-
-            _atlasMap[key] = new UIAtlas(spriteAtlas);
+            if(!_atlasMap.ContainsKey(key))
+            {
+                _atlasMap[key] = new UIAtlas(spriteAtlas);
+            }else
+            {
+                (_atlasMap[key] as UIAtlas).Reference++;
+            }
+            
         }
 
         public UIAtlas Get (string key)
@@ -23,10 +29,27 @@ namespace SDGame.UI.RichText
             return sprite;
         }
 
+        public Sprite GetSprite(string atlas,string name)
+        {
+            atlas = atlas ?? string.Empty;
+            name = name ?? string.Empty;
+            var spriteatlas = _atlasMap[atlas] as UIAtlas;
+            return spriteatlas.GetSprite(name);
+        }
         public void Remove (string key)
         {
             key = key ?? string.Empty;
-            _atlasMap.Remove(key);
+            if(_atlasMap.ContainsKey(key))
+            {
+                UIAtlas atlas = _atlasMap[key] as UIAtlas;
+                atlas.Reference--;
+                if (atlas.Reference == 0)
+                {
+                    atlas.Dispose();
+                    _atlasMap.Remove(key);
+                }
+            }
+           
         }
 
         public void Clear ()
