@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+ <a param=你的参数><color=red>[超链接]</color></a>其他文字<quad name=精灵名 src=图集名 width=25 height=25 start=1 end=5/>其他文字
+采用unity提供的quad方式
+https://docs.unity3d.com/Manual/StyledText.html
+quad标签 包含 start=1 end=5 的表示动态表情 name不要加索引后缀（如_1），不包含这两个属性的，要指明精灵名全名
+quad的 height属性参数值不能超过字号
+canvas的additional shader chanels需要勾选 TexCoord1
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
