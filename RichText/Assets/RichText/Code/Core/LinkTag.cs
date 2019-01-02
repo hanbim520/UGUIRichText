@@ -109,7 +109,6 @@ namespace SDGame.UI.RichText
 
         public void Reset ()
         {
-            SetLinkContent(null);
             _startIndex = 0;
             _endIndex = 0;
             isvalid = false;
@@ -135,15 +134,6 @@ namespace SDGame.UI.RichText
 //         {
 //             return _linkParams;
 //        
-        public void SetLinkContent (string LinkContent)
-        {
-            _linkContent = LinkContent;
-        }
-
-        public string GetLinkContent()
-        {
-            return _linkContent;
-        }
 
        public float GetOffset ()
         {
@@ -209,7 +199,6 @@ namespace SDGame.UI.RichText
         private RichText _richText;
         private UIAtlas  _atlas;
 
-        private string _linkContent;
         private int _endIndex = 0;
        // private string _linkParams;
         private int _startIndex;
