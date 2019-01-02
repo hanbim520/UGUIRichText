@@ -19,7 +19,7 @@ namespace SDGame.UI.RichText
        
 
         [Serializable]
-        public class RichTextClickEvent : UnityEvent<string> { }
+        public class RichTextClickEvent : UnityEvent<Dictionary<string, string>> { }
 
         [SerializeField]
         private RichTextClickEvent m_OnClick = new RichTextClickEvent();
@@ -42,7 +42,7 @@ namespace SDGame.UI.RichText
                 {
                     if (boxes[i].Contains(lp))
                     {
-                        m_OnClick.Invoke(hrefInfo.GetLinkParams());
+                        m_OnClick.Invoke(hrefInfo.GetParams());
                         return;
                     }
                 }
@@ -66,11 +66,10 @@ namespace SDGame.UI.RichText
                 var group = match.Groups[1];
                 LinkTag tag = _GetLinkTag(index);
                 tag.SetStartIndex(mTextBuilder.Length * 4);
-                tag.SetEndIndex((mTextBuilder.Length + match.Groups[2].Length - 1) * 4 + 3);
-                tag.SetLinkParams(group.Value);
+                tag.SetEndIndex((mTextBuilder.Length + match.Groups["text"].Length - 1) * 4 + 3);
                 mUnderlineTagInfos.Add(tag);
                 ++index;
-                mTextBuilder.Append(match.Groups[2].Value);
+                mTextBuilder.Append(match.Groups["text"].Value);
                 indexText = match.Index + match.Length;
                 tag.SetValue(match);
             }

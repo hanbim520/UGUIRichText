@@ -16,6 +16,7 @@ namespace SDGame.UI.RichText
             Horizontal,
 //            Vertical,
         }
+        private Dictionary<string, string> paramDic = new Dictionary<string, string>();
         public List<Rect> Boxes = new List<Rect>();
         private bool isvalid = false;
         public LinkTag(RichText richText)
@@ -67,7 +68,7 @@ namespace SDGame.UI.RichText
             {
                 return false;
             }
-
+            paramDic.Clear();
             for (int i = 0; i < keyCaptures.Count; ++i)
             {
                 var key = keyCaptures[i].Value;
@@ -80,18 +81,13 @@ namespace SDGame.UI.RichText
             return true;
         }
 
+        public Dictionary<string,string> GetParams()
+        {
+            return paramDic;
+        }
         private void _CheckSetValue (Match match, string key, string val)
         {
-            if (key == "href")
-            {
-                SetLinkContent(val);
-                _startIndex = match.Index;
-            }
-            else if (key == "params")
-            {
-                var path = val;
-                SetLinkParams(val);
-            }
+            paramDic.Add(key, val);
 //             else if (key == "width")
 //             {
 //                 float width;
@@ -123,11 +119,10 @@ namespace SDGame.UI.RichText
         {
             return _startIndex;
         }
-        public void SetLinkParams(string param)
-        {
-            _linkParams = param;
-        }
-//         public void SetName(string name)
+//         public void SetLinkParams(string param)
+//         {
+//             _linkParams = param;
+//        //         public void SetName(string name)
 //         {
 //             isvalid = true;
 //             _name = name;
@@ -136,11 +131,10 @@ namespace SDGame.UI.RichText
 //         {
 //             return _name;
 //              
-        public string GetLinkParams()
-        {
-            return _linkParams;
-        }
-
+//         public string GetLinkParams()
+//         {
+//             return _linkParams;
+//        
         public void SetLinkContent (string LinkContent)
         {
             _linkContent = LinkContent;
@@ -217,7 +211,7 @@ namespace SDGame.UI.RichText
 
         private string _linkContent;
         private int _endIndex = 0;
-        private string _linkParams;
+       // private string _linkParams;
         private int _startIndex;
         //private string _name;
 
@@ -228,9 +222,10 @@ namespace SDGame.UI.RichText
 
 
         // private static readonly string mHrefRegex = @"(?is)<a(?:(?!href=).)*href=(['""]?)(?<url>[^""\s>]*)\1[^>]*>(?<text>(?:(?!</?a\b).)*)</a>";
-        private static readonly string mHrefRegex = @"<a param=([^>\n\s]+)>(.*?)(</a>)";//可用
-       //  private static readonly string mHrefRegex = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(.*?)(</a>)";
-       // private static readonly string mHrefRegex = @"<url id=([^>\n\s]+)\s(?:\s+(\w+)>(.*?)(</url>)";
+        // private static readonly string mHrefRegex = @"<a param=([^>\n\s]+)>(.*?)(</a>)";//可用
+        //  private static readonly string mHrefRegex = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(.*?)(</a>)";
+        // private static readonly string mHrefRegex = @"<url id=([^>\n\s]+)\s(?:\s+(\w+)>(.*?)(</url>)";\
+        private static readonly string mHrefRegex = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(?<text>(?:(?!</?a\b).)*)</a>";
         private static readonly Regex _linkTagRegex = new Regex(mHrefRegex, RegexOptions.Singleline);
     }
 }
