@@ -7,8 +7,8 @@ public class RichTextTest : MonoBehaviour {
     public RichText text; 
 	// Use this for initialization
 	void Start () {
-        text.onClick.AddListener((string tag)=> {
-            Debug.Log("Clicked: " + tag);
+        text.onClick.AddListener((string param) => {
+            Debug.Log("param: " + param);
         });
     }
 	

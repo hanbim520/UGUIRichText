@@ -58,7 +58,23 @@ namespace SDGame.UI.RichText
             {
                 return false;
             }
-            string url = match.Groups["url"].Value;
+
+            var keyCaptures = match.Groups[1].Captures;
+            var valCaptures = match.Groups[2].Captures;
+
+            var count = keyCaptures.Count;
+            if (count != valCaptures.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < keyCaptures.Count; ++i)
+            {
+                var key = keyCaptures[i].Value;
+                var val = valCaptures[i].Value;
+                _CheckSetValue(match, key, val);
+            }
+
             isvalid = true;
 
             return true;
@@ -111,15 +127,15 @@ namespace SDGame.UI.RichText
         {
             _linkParams = param;
         }
-        public void SetName(string name)
-        {
-            isvalid = true;
-            _name = name;
-        }
-        public string GetName()
-        {
-            return _name;
-        }
+//         public void SetName(string name)
+//         {
+//             isvalid = true;
+//             _name = name;
+//         }
+//        public string GetName()
+//         {
+//             return _name;
+//              
         public string GetLinkParams()
         {
             return _linkParams;
@@ -203,16 +219,18 @@ namespace SDGame.UI.RichText
         private int _endIndex = 0;
         private string _linkParams;
         private int _startIndex;
-        private string _name;
+        //private string _name;
 
         private float _offset = 0;
 
         private float _fillAmount = 1.0f;
         private FillMethod _fillMethod = FillMethod.None;
-        //private static readonly string mHrefRegex = @"(?i)<a\b[^>]*?href=([']?)[^']?\1[^>]*?>";
-        //private static readonly string mHrefRegex = @"<a(?:\s+(\w+)\s*=\s*(?<a>['""]?)([\w\/]+)\k<a>)+\s*\/>";
+
+
         // private static readonly string mHrefRegex = @"(?is)<a(?:(?!href=).)*href=(['""]?)(?<url>[^""\s>]*)\1[^>]*>(?<text>(?:(?!</?a\b).)*)</a>";
-        private static readonly string mHrefRegex = @"<a id=([^>\n\s]+)>(.*?)(</a>)";
+        private static readonly string mHrefRegex = @"<a param=([^>\n\s]+)>(.*?)(</a>)";//可用
+       //  private static readonly string mHrefRegex = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(.*?)(</a>)";
+       // private static readonly string mHrefRegex = @"<url id=([^>\n\s]+)\s(?:\s+(\w+)>(.*?)(</url>)";
         private static readonly Regex _linkTagRegex = new Regex(mHrefRegex, RegexOptions.Singleline);
     }
 }

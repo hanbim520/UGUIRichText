@@ -42,7 +42,7 @@ namespace SDGame.UI.RichText
                 {
                     if (boxes[i].Contains(lp))
                     {
-                        m_OnClick.Invoke(hrefInfo.GetName());
+                        m_OnClick.Invoke(hrefInfo.GetLinkParams());
                         return;
                     }
                 }
@@ -67,11 +67,12 @@ namespace SDGame.UI.RichText
                 LinkTag tag = _GetLinkTag(index);
                 tag.SetStartIndex(mTextBuilder.Length * 4);
                 tag.SetEndIndex((mTextBuilder.Length + match.Groups[2].Length - 1) * 4 + 3);
-                tag.SetName(group.Value);
+                tag.SetLinkParams(group.Value);
                 mUnderlineTagInfos.Add(tag);
                 ++index;
                 mTextBuilder.Append(match.Groups[2].Value);
                 indexText = match.Index + match.Length;
+                tag.SetValue(match);
             }
             mTextBuilder.Append(strText.Substring(indexText, strText.Length - indexText));
           
