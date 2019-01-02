@@ -82,7 +82,7 @@ namespace SDGame.UI.RichText
         {
             this.verts = verts;
             GetBounds(toFill, mUnderlineTagInfos);
-            //绘制underline 暂无实现
+            //绘制underline  实现有点bug，先不开启
 //             TextGenerator textGenerator = new TextGenerator();
 //             textGenerator.Populate("_", setting);
 //             IList<UIVertex> underlineVerts = textGenerator.verts;

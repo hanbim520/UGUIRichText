@@ -42,6 +42,23 @@ namespace SDGame.UI.RichText
             StartCoroutine(_CoUpdateSprite());
             base.OnEnable();
         }
+
+        private void InitImage()
+        {
+            var tags = GetSpriteTags();
+            var count = tags.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                var tag = tags[i];
+                if (tag.GetStartFrame() == tag.GetStartFrame() && tag.GetStartFrame() == 0)
+                {
+                    tag.SetAniName(tag.GetName());
+                    
+                }
+            }
+            SetVerticesDirty();
+        }
+
         private IEnumerator _CoUpdateSprite()
         {                       
             while (true)
@@ -53,16 +70,20 @@ namespace SDGame.UI.RichText
                 for (int i = 0; i < count; ++i)
                 {
                     var tag = tags[i];
-                    int frameLength = tag.GetEndFrame() - tag.GetStartFrame();
-                    tag.PlayerCurrentFrame = (tag.PlayerCurrentFrame++) % (frameLength) + tag.GetEndFrame();
-//                     var atlas = tag.GetAtlas();
-//                     var sprites = atlas.GetSprites();
-//                     var sprite = sprites[UnityEngine.Random.Range(0, sprites.Length)];
-                    string spriteName = string.Format("{0}_{1}", tag.GetName(), tag.PlayerCurrentFrame);
-                    tag.SetAniName(spriteName);
-
-                    SetVerticesDirty();
+                    if (tag.GetStartFrame() == tag.GetStartFrame() && tag.GetStartFrame() != 0)
+                    {
+                        int frameLength = tag.GetEndFrame() - tag.GetStartFrame();
+                        tag.PlayerCurrentFrame = (tag.PlayerCurrentFrame++) % (frameLength) + tag.GetEndFrame();
+                        //                     var atlas = tag.GetAtlas();
+                        //                     var sprites = atlas.GetSprites();
+                        //                     var sprite = sprites[UnityEngine.Random.Range(0, sprites.Length)];
+                        //待优化
+                        string spriteName = string.Format("{0}_{1}", tag.GetName(), tag.PlayerCurrentFrame);
+                        tag.SetAniName(spriteName);
+                        
+                    }
                 }
+                SetVerticesDirty();
             }
         }
 
@@ -148,7 +169,7 @@ namespace SDGame.UI.RichText
             {
                 return;
             }
-
+            //来自官方Text源码
             // We don't care if we the font Texture changes while we are doing our Update.
             // The end result of cachedTextGenerator will be valid for this instance.
             // Otherwise we can get issues like Case 619238.
