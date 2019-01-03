@@ -65,6 +65,8 @@ namespace SDGame.UI.RichText
             {
                 Vector3 start = new Vector3(DrawLineRect[i].x, DrawLineRect[i].y , 0);
                 Vector3 end = new Vector3(DrawLineRect[i].x  + DrawLineRect[i].width, DrawLineRect[i].y , 0);
+
+
                 Gizmos.DrawLine(start, end);
             }
         }
