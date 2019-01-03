@@ -15,11 +15,8 @@ public class RichTextTest : MonoBehaviour {
             }
         });
 
-        //var strJson = @"<a param=link=123><color=red>[测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试]测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试]测试][测试][测试][测试][测试][测试][测试][测试][测试测试][测试][测试][测试][测试][测试][测试][测试][测试][测试][测试]</color></a>";
         var strJson = @"<a param=link abc=123>[测试][测试]</a>";
-        //方法一
         string _spriteTagPattern = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(?<text>(?:(?!</?a\b).)*)</a>";
-       // string _spriteTagPattern = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(.*?)</a>";
         Regex rg = new Regex(_spriteTagPattern);
         MatchCollection mc = rg.Matches(strJson);
         foreach (Match match in mc)
@@ -42,16 +39,9 @@ public class RichTextTest : MonoBehaviour {
                 Debug.Log("Key: " + key + " Val: " + val);
             }
         }
-           
-
-        //方法三
-        //         foreach (Match match in Regex.Matches(strJson, "<a[^>]*>([^<]*)</a>"))
-        //             Debug.Log(string.Format("Duplicate '{0}' found at position {1}.",  match.Groups[1].Value, match.Groups[2].Index));
+    
 
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	
 }            

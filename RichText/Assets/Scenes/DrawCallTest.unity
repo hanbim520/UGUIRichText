@@ -490,7 +490,6 @@ GameObject:
   - component: {fileID: 988746626}
   - component: {fileID: 988746628}
   - component: {fileID: 988746627}
-  - component: {fileID: 988746629}
   m_Layer: 5
   m_Name: RichText
   m_TagString: Untagged
@@ -513,8 +512,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16, y: -0.0000061989}
-  m_SizeDelta: {x: 698, y: 441.4}
+  m_AnchoredPosition: {x: 51, y: -50.5}
+  m_SizeDelta: {x: 735.6, y: 440.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &988746627
 MonoBehaviour:
@@ -548,7 +547,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u554A\u554A\u554A\u554A\u554A\u554A\u554A\u554A\u554A<a param=link abc=123><color=red>[\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]</color></a>\u5730\u65B9\u5927\u7684\u8303\u5FB7\u8428\u7B97\u6CD5\u90FD\u662F\u53D1\u90FD\u662F\u6D4B\u8BD5\u7528\u7684\u6587\u5B57<quad
+  m_Text: "\u554A\u554A\u554A\u554A\u554A\u554A\u554A\u554A\u554A<a param=link abc=123><color=red>[\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5\u6D4B\u8BD5][[[\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]</color></a>\u5730\u65B9\u5927\u7684\u8303\u5FB7\u8428\u7B97\u6CD5\u90FD\u662F\u53D1\u90FD\u662F\u6D4B\u8BD5\u7528\u7684\u6587\u5B57<quad
     name=face src=chat width=25 height=25 start=1 end=5/>\u5C3E\u5DF4\n\u554A\u554A\u554A\u554A\u554A\u554A\u554A\u554A\u554A<a
     param=aaa><color=red>[\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5][\u6D4B\u8BD5]</color></a>\u5730\u65B9\u5927\u7684\u8303\u5FB7\u8428\u7B97\u6CD5\u90FD\u662F\u53D1\u90FD\u662F\u6D4B\u8BD5\u7528\u7684\u6587\u5B57<quad
     name=face src=chat width=25 height=25 start=1 end=5/>\u5C3E\u5DF4\n<quad name=face_1
@@ -569,39 +568,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 988746625}
---- !u!114 &988746629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 988746625}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b156c59e2801544393d855080d0e700, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
 --- !u!1 &1197122927
 GameObject:
   m_ObjectHideFlags: 0
