@@ -28,8 +28,7 @@ namespace SDGame.UI.RichText
         List<UILineInfo> m_Lines = new List<UILineInfo>(20);
         private IList<UIVertex> verts = null;
 
-        private List<Rect> draw = new List<Rect>();
-
+        List<Rect> DrawLineRect = new List<Rect>();
         [Serializable]
         public class RichTextClickEvent : UnityEvent<Dictionary<string, string>> { }
 
@@ -56,6 +55,16 @@ namespace SDGame.UI.RichText
             }
             Debug.LogWarning("GetCharacterInfo failed");
             return Vector2.zero;
+        }
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.blue;
+            for (int i = 0;i < DrawLineRect.Count;++i)
+            {
+                Vector3 start = new Vector3(DrawLineRect[i].x, DrawLineRect[i].y , 0);
+                Vector3 end = new Vector3(DrawLineRect[i].x  + DrawLineRect[i].width, DrawLineRect[i].y , 0);
+                Gizmos.DrawLine(start, end);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -108,26 +117,6 @@ namespace SDGame.UI.RichText
           
             _ResetLinkTags(index);
         }
-        void OnGUI()
-        {
-            GUIStyle style = new GUIStyle
-            {
-                border = new RectOffset(10, 10, 10, 10),
-                fontSize = 50,
-                fontStyle = FontStyle.BoldAndItalic,
-            };
-            // normal:Rendering settings for when the component is displayed normally.
-            style.normal.textColor = new Color(200 / 255f, 180 / 255f, 150 / 255f);    // 需要除以255，因为范围是0-1
-
-            if (draw == null) return;
-//             for(int i = 0;i < draw.Count;++i)
-//             {
-// 
-//                 Gizmos.DrawGUITexture(draw[i], new Texture());
-//             }
-            
-        }
-
         private void _HandleLinkTag(VertexHelper toFill,IList<UIVertex> verts, TextGenerationSettings setting)
         {
             this.verts = verts;
@@ -164,12 +153,12 @@ namespace SDGame.UI.RichText
             Vector3[] underlinePos = new Vector3[4];
             underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
             underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
-            underlinePos[2] = endBoxPos + new Vector3(0, fontSize * 0f, 0);
-            underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0f, 0);
+            underlinePos[2] = endBoxPos + new Vector3(0, fontSize  * 0, 0);
+            underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0, 0);
             for (int i = 0; i < 4; ++i)
             {
                 int tempVertsIndex = i & 3;
-                _tempVerts[tempVertsIndex] = underlineVerts[i % 4];
+                _tempVerts[tempVertsIndex] = underlineVerts[i ];
                 _tempVerts[tempVertsIndex].color = Color.blue;
                 _tempVerts[tempVertsIndex].position = underlinePos[i];
                 if (tempVertsIndex == 3)
@@ -229,11 +218,7 @@ namespace SDGame.UI.RichText
             SetNativeSize();
             UIVertex vertStart3 = new UIVertex();
             UIVertex vertEnd1 = new UIVertex();
-          
-            //float fontSz = fontSize * 0.5f;
-            float unitsPerPixel = 1 / pixelsPerUnit;
-            UIVertex vertPre = new UIVertex();
-            draw.Clear();
+            DrawLineRect.Clear();
             // 处理超链接包围框
             foreach (var hrefInfo in m_HrefInfos)
             {
@@ -242,7 +227,6 @@ namespace SDGame.UI.RichText
                 {
                     continue;
                 }
-                int lineCount = 0;
                 var pos = verts[hrefInfo.GetStartIndex()].position;
 
                 List<BoxStruct> box = ConstructBox(hrefInfo.GetStartIndex(), hrefInfo.GetEndIndex());
@@ -256,7 +240,9 @@ namespace SDGame.UI.RichText
                    
                     int startVert = boxStruct.start * 4 + 3;
                     int endVert = boxStruct.end * 4 + 1;
-                    if (startVert >= toFill.currentVertCount || endVert >= toFill.currentVertCount)
+                    endVert = endVert > toFill.currentVertCount ? toFill.currentVertCount - 2 : endVert;
+                  
+                    if (startVert >= toFill.currentVertCount )
                     {
                         break;
                     }
@@ -266,33 +252,7 @@ namespace SDGame.UI.RichText
                     rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), m_Lines[boxStruct.line].height);
                    // rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), Mathf.Abs(vertEnd1.position.y - vertStart3.position.y));
                     hrefInfo.Boxes.Add(rect);
-                    draw.Add(rect);
-
-
-//                     toFill.PopulateUIVertex(ref vert, startVert);
-//                     var pos_a = vertStart3.position;
-//                     toFill.PopulateUIVertex(ref vert, boxStruct.end * 4 - 2);
-//                     var pos_b = vert.position;
-//                     var y = (pos_a.y + pos_b.y) * 0.5f;
-// 
-//                     var pos0 = new Vector3(pos_a.x, y - LineOffset);
-//                     var pos1 = new Vector3(pos_b.x, y - LineOffset);
-//                     var pos2 = new Vector3(pos_b.x, y - LineOffset - LineThickness);
-//                     var pos3 = new Vector3(pos_a.x, y - LineOffset - LineThickness);
-// 
-//                     vert.color = UnderlineColor;
-//                     vert.uv0 = GetUnderlineCharUV();
-// 
-//                     vert.position = pos0;
-//                     data[0] = vert;
-//                     vert.position = pos1;
-//                     data[1] = vert;
-//                     vert.position = pos2;
-//                     data[2] = vert;
-//                     vert.position = pos3;
-//                     data[3] = vert;
-// 
-//                     toFill.AddUIVertexQuad(data);
+                    DrawLineRect.Add(rect);
                 }
             }
         }
