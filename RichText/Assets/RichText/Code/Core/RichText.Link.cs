@@ -10,13 +10,25 @@ using UnityEngine.UI;
 
 namespace SDGame.UI.RichText
 {
+    public struct BoxStruct
+    {
+        public int line;
+        public int start;
+        public int end;
+    }
     partial class RichText
     {
+        public float LineOffset = 1f;
+        public float LineThickness = 2;
+        public Color UnderlineColor = Color.black;
+
+        private static readonly UIVertex[] data = new UIVertex[4];
         private static readonly StringBuilder mTextBuilder = new StringBuilder();
         private readonly List<LinkTag> mUnderlineTagInfos = new List<LinkTag>();
-
+        List<UILineInfo> m_Lines = new List<UILineInfo>(20);
         private IList<UIVertex> verts = null;
-       
+
+        private List<Rect> draw = new List<Rect>();
 
         [Serializable]
         public class RichTextClickEvent : UnityEvent<Dictionary<string, string>> { }
@@ -29,6 +41,23 @@ namespace SDGame.UI.RichText
             get { return m_OnClick; }
             set { m_OnClick = value; }
         }
+        public void GetLines(List<UILineInfo> lines)
+        {
+            cachedTextGenerator.GetLines(lines);
+        }
+
+        private Vector2 GetUnderlineCharUV()
+        {
+            var ch = '*';
+            CharacterInfo info;
+            if (font.GetCharacterInfo(ch, out info, fontSize, fontStyle))
+            {
+                return (info.uvBottomLeft + info.uvBottomRight + info.uvTopLeft + info.uvTopRight) * 0.25f;
+            }
+            Debug.LogWarning("GetCharacterInfo failed");
+            return Vector2.zero;
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             Vector2 lp;
@@ -76,48 +105,63 @@ namespace SDGame.UI.RichText
             mTextBuilder.Append(strText.Substring(indexText, strText.Length - indexText));
           
             strText = mTextBuilder.ToString();
+          
             _ResetLinkTags(index);
         }
+        void OnGUI()
+        {
+            GUIStyle style = new GUIStyle
+            {
+                border = new RectOffset(10, 10, 10, 10),
+                fontSize = 50,
+                fontStyle = FontStyle.BoldAndItalic,
+            };
+            // normal:Rendering settings for when the component is displayed normally.
+            style.normal.textColor = new Color(200 / 255f, 180 / 255f, 150 / 255f);    // 需要除以255，因为范围是0-1
+
+            if (draw == null) return;
+//             for(int i = 0;i < draw.Count;++i)
+//             {
+// 
+//                 Gizmos.DrawGUITexture(draw[i], new Texture());
+//             }
+            
+        }
+
         private void _HandleLinkTag(VertexHelper toFill,IList<UIVertex> verts, TextGenerationSettings setting)
         {
             this.verts = verts;
+            GetLines(m_Lines);
             GetBounds(toFill, mUnderlineTagInfos);
             //绘制underline  实现有点bug，先不开启
-//             TextGenerator textGenerator = new TextGenerator();
-//             textGenerator.Populate("_", setting);
-//             IList<UIVertex> underlineVerts = textGenerator.verts;
-//             for (int m = 0; m < mUnderlineTagInfos.Count; ++m)
-//             {
-//                 var underlineInfo = mUnderlineTagInfos[m];
-//                 if (!underlineInfo.IsValid())
-//                 {
-//                     continue;
-//                 }
-//                 if (underlineInfo.GetStartIndex() >= mVertexHelperRef.currentVertCount)
-//                 {
-//                     continue;
-//                 }
-//                
-//                 for (int i = 0; i < underlineInfo.Boxes.Count; i++)
-//                 {
-//                     Vector3 startBoxPos = new Vector3(underlineInfo.Boxes[i].x, underlineInfo.Boxes[i].y, 0.0f);
-//                     Vector3 endBoxPos = startBoxPos + new Vector3(underlineInfo.Boxes[i].width, 0.0f, 0.0f);
-//                     float height = underlineInfo.Boxes[i].height;
-//                     float fontSizeHeight = GetComponent<Text>().preferredHeight;
-//                     AddUnderlineQuad(underlineVerts, startBoxPos, endBoxPos);
-//                 } 
-//             }
+            TextGenerator textGenerator = new TextGenerator();
+            textGenerator.Populate("_", setting);
+            IList<UIVertex> underlineVerts = textGenerator.verts;
+            for (int m = 0; m < mUnderlineTagInfos.Count; ++m)
+            {
+                var underlineInfo = mUnderlineTagInfos[m];
+                if (!underlineInfo.IsValid())
+                {
+                    continue;
+                }
+                if (underlineInfo.GetStartIndex() >= mVertexHelperRef.currentVertCount)
+                {
+                    continue;
+                }
+               
+                for (int i = 0; i < underlineInfo.Boxes.Count; i++)
+                {
+                    Vector3 startBoxPos = new Vector3(underlineInfo.Boxes[i].x, underlineInfo.Boxes[i].y - 1, 0.0f);
+                    Vector3 endBoxPos = startBoxPos + new Vector3(underlineInfo.Boxes[i].width, 0.0f, 0.0f);
+                    AddUnderlineQuad(underlineVerts, startBoxPos, endBoxPos);
+                } 
+            }
 
         }
         #region 添加下划线  
         private void AddUnderlineQuad(IList<UIVertex> underlineVerts, Vector3 startBoxPos, Vector3 endBoxPos)
         {
             Vector3[] underlinePos = new Vector3[4];
-            //             underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
-            //             underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
-            //             underlinePos[2] = endBoxPos + new Vector3(0, fontSize * 0f, 0);
-            //             underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0f, 0);
-
             underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
             underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
             underlinePos[2] = endBoxPos + new Vector3(0, fontSize * 0f, 0);
@@ -135,19 +179,61 @@ namespace SDGame.UI.RichText
             }
         }
 
+        private int GetCharLine(int charIndex)
+        {
+            int line = 0;
+            for(int i = 0;i <m_Lines.Count;++i)
+            {
+                if(m_Lines[i].startCharIdx> charIndex)
+                {
+                    return line;
+                }
+                line = i;
+            }
+            return line;
+        }
 
+        private List<BoxStruct> ConstructBox(int startIndex,int endIndex)
+        {
+            startIndex = startIndex / 4;
+            endIndex = (endIndex - 3) / 4;
+            List<BoxStruct> box = new List<BoxStruct>();
+            BoxStruct boxStruct;
+            int preLine = 0;
+            boxStruct = new BoxStruct();
+            int line = GetCharLine(startIndex );
+            preLine = line;
+            boxStruct.line = line;
+            boxStruct.start = startIndex;
+            for (int i=startIndex;i<= endIndex;++i)
+            {
+                line = GetCharLine(i);
+                if(preLine != line)
+                {
+                    box.Add(boxStruct);
+                    preLine = line;
+                    boxStruct.line = line;
+                    boxStruct.start = i;
+                }
+                else
+                {
+                    boxStruct.end = i;
+                }
+            }
+            box.Add(boxStruct);
+            return box;
+        }
         #endregion
         private void GetBounds(VertexHelper toFill,List<LinkTag> m_HrefInfos)
         {
             SetNativeSize();
-            UIVertex vert0 = new UIVertex();
-            UIVertex vert1 = new UIVertex();
-            UIVertex vert2 = new UIVertex();
-            UIVertex vert3 = new UIVertex();
+            UIVertex vertStart3 = new UIVertex();
+            UIVertex vertEnd1 = new UIVertex();
+          
             //float fontSz = fontSize * 0.5f;
             float unitsPerPixel = 1 / pixelsPerUnit;
             UIVertex vertPre = new UIVertex();
-
+            draw.Clear();
             // 处理超链接包围框
             foreach (var hrefInfo in m_HrefInfos)
             {
@@ -158,65 +244,56 @@ namespace SDGame.UI.RichText
                 }
                 int lineCount = 0;
                 var pos = verts[hrefInfo.GetStartIndex()].position;
-                var bounds = new Bounds(pos, Vector3.zero);
-//                 Rect rect = new Rect();
-//                 float maxY = 0;
-//                 float minX = 0;
-//                 float maxHeight = 0;
-               toFill.PopulateUIVertex(ref vertPre, hrefInfo.GetStartIndex() + 3);
-                for (int i = hrefInfo.GetStartIndex(), m = hrefInfo.GetEndIndex(); i < m; i+=4)
+
+                List<BoxStruct> box = ConstructBox(hrefInfo.GetStartIndex(), hrefInfo.GetEndIndex());
+
+                UIVertex vert = UIVertex.simpleVert;
+
+                for (int i = 0;i <box.Count;++i)
                 {
-                    if (i >= toFill.currentVertCount)
+                    BoxStruct boxStruct = box[i];
+                    Rect rect = new Rect();
+                   
+                    int startVert = boxStruct.start * 4 + 3;
+                    int endVert = boxStruct.end * 4 + 1;
+                    if (startVert >= toFill.currentVertCount || endVert >= toFill.currentVertCount)
                     {
                         break;
                     }
+                    toFill.PopulateUIVertex(ref vertStart3, startVert);
+                    toFill.PopulateUIVertex(ref vertEnd1, endVert);
 
-                    toFill.PopulateUIVertex(ref vert0, i);
-                    toFill.PopulateUIVertex(ref vert1, i+1);
-                    toFill.PopulateUIVertex(ref vert2, i+2);
-                    toFill.PopulateUIVertex(ref vert3, i+3);
-                    Rect rect = new Rect();
-                    rect.Set(vert3.position.x, vert3.position.y,Mathf.Abs(vert2.position.x - vert3.position.x), Mathf.Abs( vert2.position.y - vert1.position.y));
-                     hrefInfo.Boxes.Add(rect);
-                    //                     vert0 = verts[i];
-                    //                     vert1 = verts[i+1];
-                    //                     vert2 = verts[i+2];
-                    //                     vert3 = verts[i+3];
+                    rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), m_Lines[boxStruct.line].height);
+                   // rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), Mathf.Abs(vertEnd1.position.y - vertStart3.position.y));
+                    hrefInfo.Boxes.Add(rect);
+                    draw.Add(rect);
 
-                    //                     bool newline = Mathf.Abs(vert2.position.y - vertPre.position.y) > fontSize;
-                    //                     if (newline)
-                    //                     {
-                    //                         maxHeight = 0;
-                    //                         maxY = 0;
-                    //                         minX = 0;
-                    // 
-                    //                         hrefInfo.Boxes.Add(rect);
-                    //                         rect = new Rect();
-                    //                         lineCount++;
-                    //                     }
-                    //                     else
-                    //                     {
-                    //                         if (maxY < vert3.position.y)
-                    //                         {
-                    //                             maxY = vert3.position.y;
-                    //                         }
-                    //                         if(minX > vert3.position.x)
-                    //                         {
-                    //                             minX = vert3.position.x;
-                    //                         }
-                    //                         float height = Mathf.Abs(vert2.position.y - vert1.position.y);
-                    //                         if (maxHeight > height)
-                    //                         {
-                    //                             maxHeight = height;
-                    //                         }
-                    //                         rect.Set(minX * unitsPerPixel, maxY * unitsPerPixel, Mathf.Abs(vert2.position.x - minX) , height);
-                    // 
-                    //                     }
-                    //                     vertPre = verts[i +3];
+
+//                     toFill.PopulateUIVertex(ref vert, startVert);
+//                     var pos_a = vertStart3.position;
+//                     toFill.PopulateUIVertex(ref vert, boxStruct.end * 4 - 2);
+//                     var pos_b = vert.position;
+//                     var y = (pos_a.y + pos_b.y) * 0.5f;
+// 
+//                     var pos0 = new Vector3(pos_a.x, y - LineOffset);
+//                     var pos1 = new Vector3(pos_b.x, y - LineOffset);
+//                     var pos2 = new Vector3(pos_b.x, y - LineOffset - LineThickness);
+//                     var pos3 = new Vector3(pos_a.x, y - LineOffset - LineThickness);
+// 
+//                     vert.color = UnderlineColor;
+//                     vert.uv0 = GetUnderlineCharUV();
+// 
+//                     vert.position = pos0;
+//                     data[0] = vert;
+//                     vert.position = pos1;
+//                     data[1] = vert;
+//                     vert.position = pos2;
+//                     data[2] = vert;
+//                     vert.position = pos3;
+//                     data[3] = vert;
+// 
+//                     toFill.AddUIVertexQuad(data);
                 }
-
-            //    hrefInfo.Boxes.Add(rect);
-            //    Debug.Log("lineCount： " + lineCount);
             }
         }
 

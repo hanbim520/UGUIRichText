@@ -63,7 +63,8 @@ namespace SDGame.UI.RichText
             if (key == "name")
             {
                 SetName(val);
-                _vertexIndex = match.Index;
+                _vertexStartIndex = match.Index;
+                SetVertexEndIndex(match.Index + match.Length - 1);
             }
             else if (key == "src")
             {
@@ -119,9 +120,9 @@ namespace SDGame.UI.RichText
             SetName(null);
         }
 
-        public int GetVertexIndex ()
+        public int GetVertexStartIndex()
         {
-            return _vertexIndex;
+            return _vertexStartIndex;
         }
 
         public void SetName (string name)
@@ -219,18 +220,28 @@ namespace SDGame.UI.RichText
         {
             _AniName = name;
         }
+
+        private void SetVertexEndIndex(int end)
+        {
+            _vertexEndIndex = end;
+        }
+        public int GetVertexEndIndex()
+        {
+            return _vertexEndIndex;
+        }
         private RichText _richText;
         private UIAtlas  _atlas;
 
         private string _name;
         private string _AniName;
-        private int _vertexIndex;
+        private int _vertexStartIndex;
 
         private Vector2 _size;
         private float _offset = 0;
 
         private int _startFrame = 0;
         private int _endFrame = 0;
+        private int _vertexEndIndex = 0;
 
         private float _fillAmount = 1.0f;
         private FillMethod _fillMethod = FillMethod.None;

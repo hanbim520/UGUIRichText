@@ -22,7 +22,6 @@ public class RichTextTest : MonoBehaviour {
        // string _spriteTagPattern = @"<a(?:\s+(\w+)\s*=\s*(?<quota>['""]?)([\w\/]+)\k<quota>)+\s*\>(.*?)</a>";
         Regex rg = new Regex(_spriteTagPattern);
         MatchCollection mc = rg.Matches(strJson);
-      
         foreach (Match match in mc)
         {
             var keyCaptures = match.Groups[1].Captures;

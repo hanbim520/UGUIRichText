@@ -101,6 +101,7 @@ namespace SDGame.UI.RichText
             
         }
 
+       
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -161,6 +162,11 @@ namespace SDGame.UI.RichText
             _ParseLinkTags(ref _parseOutputText);
             _ParseSpriteTags(_parseOutputText);
           
+        }
+
+        private void CheckSpriteTag()
+        {
+
         }
 
         private void LateUpdate()

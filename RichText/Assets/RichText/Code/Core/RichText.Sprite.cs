@@ -64,7 +64,7 @@ namespace SDGame.UI.RichText
         private void _SetSpriteVertex_FillMethod_None (VertexHelper toFill, SpriteTag spriteTag, Sprite sprite)
         {
             UIVertex v = UIVertex.simpleVert;
-            var vertexIndex = spriteTag.GetVertexIndex() * 4;
+            var vertexIndex = spriteTag.GetVertexStartIndex() * 4;
             var fetchIndex = vertexIndex + 3;
             if (fetchIndex >= toFill.currentVertCount)
             {
@@ -122,7 +122,7 @@ namespace SDGame.UI.RichText
         private void _SetSpriteVertex_FillMethod_Horizontal (VertexHelper toFill, SpriteTag spriteTag, Sprite sprite)
         {
             UIVertex v = UIVertex.simpleVert;
-            var vertexIndex = spriteTag.GetVertexIndex() * 4;
+            var vertexIndex = spriteTag.GetVertexStartIndex() * 4;
             var fetchIndex = vertexIndex + 3;
             if (fetchIndex >= toFill.currentVertCount)
             {
