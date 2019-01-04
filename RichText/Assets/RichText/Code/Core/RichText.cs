@@ -9,6 +9,7 @@ https://docs.unity3d.com/Manual/StyledText.html
 quad标签 包含 start=1 end=5 的表示动态表情 name不要加索引后缀（如_1），不包含这两个属性的，要指明精灵名全名
 quad的 height属性参数值不能超过字号
 canvas的additional shader chanels需要勾选 TexCoord1
+图集的Tight Packing 不可勾选
  */
 
 using System;
