@@ -127,28 +127,28 @@ namespace SDGame.UI.RichText
             GetLines(m_Lines);
             GetBounds(toFill, mUnderlineTagInfos);
             //绘制underline  实现有点bug，先不开启
-            TextGenerator textGenerator = new TextGenerator();
-            textGenerator.Populate("_", setting);
-            IList<UIVertex> underlineVerts = textGenerator.verts;
-            for (int m = 0; m < mUnderlineTagInfos.Count; ++m)
-            {
-                var underlineInfo = mUnderlineTagInfos[m];
-                if (!underlineInfo.IsValid())
-                {
-                    continue;
-                }
-                if (underlineInfo.GetStartIndex() >= mVertexHelperRef.currentVertCount)
-                {
-                    continue;
-                }
-               
-                for (int i = 0; i < underlineInfo.Boxes.Count; i++)
-                {
-                    Vector3 startBoxPos = new Vector3(underlineInfo.Boxes[i].x, underlineInfo.Boxes[i].y - 1, 0.0f);
-                    Vector3 endBoxPos = startBoxPos + new Vector3(underlineInfo.Boxes[i].width, 0.0f, 0.0f);
-                    AddUnderlineQuad(underlineVerts, startBoxPos, endBoxPos);
-                } 
-            }
+//             TextGenerator textGenerator = new TextGenerator();
+//             textGenerator.Populate("_", setting);
+//             IList<UIVertex> underlineVerts = textGenerator.verts;
+//             for (int m = 0; m < mUnderlineTagInfos.Count; ++m)
+//             {
+//                 var underlineInfo = mUnderlineTagInfos[m];
+//                 if (!underlineInfo.IsValid())
+//                 {
+//                     continue;
+//                 }
+//                 if (underlineInfo.GetStartIndex() >= mVertexHelperRef.currentVertCount)
+//                 {
+//                     continue;
+//                 }
+//                
+//                 for (int i = 0; i < underlineInfo.Boxes.Count; i++)
+//                 {
+//                     Vector3 startBoxPos = new Vector3(underlineInfo.Boxes[i].x, underlineInfo.Boxes[i].y - 1, 0.0f);
+//                     Vector3 endBoxPos = startBoxPos + new Vector3(underlineInfo.Boxes[i].width, 0.0f, 0.0f);
+//                     AddUnderlineQuad(underlineVerts, startBoxPos, endBoxPos);
+//                 } 
+//             }
 
         }
         #region 添加下划线  

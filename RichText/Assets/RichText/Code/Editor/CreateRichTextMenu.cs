@@ -1,9 +1,5 @@
-﻿
-/********************************************************************
-created:    2017-08-10
-author:     lixianmin
+﻿//盛大游戏 张海军 710605420@qq.com
 
-*********************************************************************/
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,12 +32,7 @@ namespace SDGame.UI.RichText
 
         private static void SetDefaultTextValues (Text lbl)
         {
-            // Set text values we want across UI elements in default controls.
-            // Don't set values which are the same as the default values for the Text component,
-            // since there's no point in that, and it's good to keep them as consistent as possible.
             lbl.color = s_TextColor;
-
-            // Reset() is not called when playing. We still want the default font to be assigned
             lbl.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         }
 

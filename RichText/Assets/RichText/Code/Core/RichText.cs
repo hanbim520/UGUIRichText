@@ -1,5 +1,9 @@
 ﻿/*
- <a param=你的参数><color=red>[超链接]</color></a>其他文字<quad name=精灵名 src=图集名 width=25 height=25 start=1 end=5/>其他文字
+ * 盛大游戏 张海军 710605420@qq.com
+ * 
+在lixianmin的基础上改的，原作者写的有些bug，加入了超链接，会逐渐加入下划线和渐变色等
+
+ <a param =你的参数><color=red>[超链接]</color></a>其他文字<quad name=精灵名 src=图集名 width=25 height=25 start=1 end=5/>其他文字
 采用unity提供的quad方式
 https://docs.unity3d.com/Manual/StyledText.html
 quad标签 包含 start=1 end=5 的表示动态表情 name不要加索引后缀（如_1），不包含这两个属性的，要指明精灵名全名
