@@ -20,6 +20,7 @@ namespace SDGame.UI.RichText
     }
     partial class RichText
     {
+     
         public float LineOffset = 1f;
         public float LineThickness = 2;
         public Color UnderlineColor = Color.black;
@@ -127,6 +128,7 @@ namespace SDGame.UI.RichText
             GetLines(m_Lines);
             GetBounds(toFill, mUnderlineTagInfos);
             //绘制underline  实现有点bug，先不开启
+            if (m_UnderLine == false) return;
             TextGenerator textGenerator = new TextGenerator();
             textGenerator.Populate("_", setting);
             IList<UIVertex> underlineVerts = textGenerator.verts;

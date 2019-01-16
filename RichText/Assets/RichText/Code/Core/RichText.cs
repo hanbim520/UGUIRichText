@@ -27,7 +27,8 @@ namespace SDGame.UI.RichText
     {
         [SerializeField]
         private SpriteAtlas[] m_Atlas;
-
+        [SerializeField]
+        public bool m_UnderLine = false;
         private VertexHelper mVertexHelperRef;
         private Font mFont;
 
