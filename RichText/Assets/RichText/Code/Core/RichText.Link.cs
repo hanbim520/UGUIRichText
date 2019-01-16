@@ -127,7 +127,7 @@ namespace SDGame.UI.RichText
             this.verts = verts;
             GetLines(m_Lines);
             GetBounds(toFill, mUnderlineTagInfos);
-            //绘制underline  实现有点bug，先不开启
+            //绘制underline,如何和图集一起显示时，shader处理无法显示下划线  实现有点bug，先不开启
             if (m_UnderLine == false) return;
             TextGenerator textGenerator = new TextGenerator();
             textGenerator.Populate("_", setting);
