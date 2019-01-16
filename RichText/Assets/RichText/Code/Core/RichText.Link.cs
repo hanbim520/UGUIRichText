@@ -27,8 +27,8 @@ namespace SDGame.UI.RichText
         private static readonly UIVertex[] data = new UIVertex[4];
         private static readonly StringBuilder mTextBuilder = new StringBuilder();
         private readonly List<LinkTag> mUnderlineTagInfos = new List<LinkTag>();
-        private List<UILineInfo> m_Lines = new List<UILineInfo>(20);
-        private UIVertex[] m_TempVerts = new UIVertex[4];
+        List<UILineInfo> m_Lines = new List<UILineInfo>(20);
+        private IList<UIVertex> verts = null;
 
         List<Rect> DrawLineRect = new List<Rect>();
         [Serializable]
@@ -123,53 +123,54 @@ namespace SDGame.UI.RichText
         }
         private void _HandleLinkTag(VertexHelper toFill,IList<UIVertex> verts, TextGenerationSettings setting)
         {
+            this.verts = verts;
             GetLines(m_Lines);
-            GetBounds(toFill, mUnderlineTagInfos, setting);
+            GetBounds(toFill, mUnderlineTagInfos);
             //绘制underline  实现有点bug，先不开启
-//             TextGenerator textGenerator = new TextGenerator();
-//             textGenerator.Populate("_", setting);
-//             IList<UIVertex> underlineVerts = textGenerator.verts;
-//             for (int m = 0; m < mUnderlineTagInfos.Count; ++m)
-//             {
-//                 var underlineInfo = mUnderlineTagInfos[m];
-//                 if (!underlineInfo.IsValid())
-//                 {
-//                     continue;
-//                 }
-//                 if (underlineInfo.GetStartIndex() >= mVertexHelperRef.currentVertCount)
-//                 {
-//                     continue;
-//                 }
-//                
-//                 for (int i = 0; i < underlineInfo.Boxes.Count; i++)
-//                 {
-//                     Vector3 startBoxPos = new Vector3(underlineInfo.Boxes[i].x, underlineInfo.Boxes[i].y - 1, 0.0f);
-//                     Vector3 endBoxPos = startBoxPos + new Vector3(underlineInfo.Boxes[i].width, 0.0f, 0.0f);
-//                     AddUnderlineQuad(toFill,underlineVerts, startBoxPos, endBoxPos);
-//                 } 
-//             }
+            TextGenerator textGenerator = new TextGenerator();
+            textGenerator.Populate("_", setting);
+            IList<UIVertex> underlineVerts = textGenerator.verts;
+            for (int m = 0; m < mUnderlineTagInfos.Count; ++m)
+            {
+                var underlineInfo = mUnderlineTagInfos[m];
+                if (!underlineInfo.IsValid())
+                {
+                    continue;
+                }
+                if (underlineInfo.GetStartIndex() >= mVertexHelperRef.currentVertCount)
+                {
+                    continue;
+                }
+               
+                for (int i = 0; i < underlineInfo.Boxes.Count; i++)
+                {
+                    Vector3 startBoxPos = new Vector3(underlineInfo.Boxes[i].x, underlineInfo.Boxes[i].y - 1, 0.0f);
+                    Vector3 endBoxPos = startBoxPos + new Vector3(underlineInfo.Boxes[i].width, 0.0f, 0.0f);
+                    AddUnderlineQuad(underlineVerts, startBoxPos, endBoxPos);
+                } 
+            }
 
         }
-//         #region 添加下划线  
-//         private void AddUnderlineQuad(IList<UIVertex> underlineVerts, Vector3 startBoxPos, Vector3 endBoxPos)
-//         {
-//             Vector3[] underlinePos = new Vector3[4];
-//             underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
-//             underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
-//             underlinePos[2] = endBoxPos + new Vector3(0, fontSize  * 0, 0);
-//             underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0, 0);
-//             for (int i = 0; i < 4; ++i)
-//             {
-//                 int tempVertsIndex = i & 3;
-//                 _tempVerts[tempVertsIndex] = underlineVerts[i ];
-//                 _tempVerts[tempVertsIndex].color = Color.blue;
-//                 _tempVerts[tempVertsIndex].position = underlinePos[i];
-//                 if (tempVertsIndex == 3)
-//                 {
-//                     mVertexHelperRef.AddUIVertexQuad(_tempVerts);
-//                 }
-//             }
-//         }
+        #region 添加下划线  
+        private void AddUnderlineQuad(IList<UIVertex> underlineVerts, Vector3 startBoxPos, Vector3 endBoxPos)
+        {
+            Vector3[] underlinePos = new Vector3[4];
+            underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
+            underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
+            underlinePos[2] = endBoxPos + new Vector3(0, fontSize  * 0, 0);
+            underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0, 0);
+            for (int i = 0; i < 4; ++i)
+            {
+                int tempVertsIndex = i & 3;
+                _tempVerts[tempVertsIndex] = underlineVerts[i ];
+                _tempVerts[tempVertsIndex].color = Color.blue;
+                _tempVerts[tempVertsIndex].position = underlinePos[i];
+                if (tempVertsIndex == 3)
+                {
+                    mVertexHelperRef.AddUIVertexQuad(_tempVerts);
+                }
+            }
+        }
 
         private int GetCharLine(int charIndex)
         {
@@ -215,7 +216,8 @@ namespace SDGame.UI.RichText
             box.Add(boxStruct);
             return box;
         }
-        private void GetBounds(VertexHelper toFill,List<LinkTag> m_HrefInfos, TextGenerationSettings setting)
+        #endregion
+        private void GetBounds(VertexHelper toFill,List<LinkTag> m_HrefInfos)
         {
             SetNativeSize();
             UIVertex vertStart3 = new UIVertex();
@@ -229,16 +231,16 @@ namespace SDGame.UI.RichText
                 {
                     continue;
                 }
+                var pos = verts[hrefInfo.GetStartIndex()].position;
 
                 List<BoxStruct> box = ConstructBox(hrefInfo.GetStartIndex(), hrefInfo.GetEndIndex());
 
-                TextGenerator textGenerator = new TextGenerator();
-                textGenerator.Populate("_", setting);
-                IList<UIVertex> underlineVerts = textGenerator.verts;
+                UIVertex vert = UIVertex.simpleVert;
+
                 for (int i = 0;i <box.Count;++i)
                 {
                     BoxStruct boxStruct = box[i];
-                  
+                    Rect rect = new Rect();
                    
                     int startVert = boxStruct.start * 4 + 3;
                     int endVert = boxStruct.end * 4 + 1;
@@ -248,87 +250,38 @@ namespace SDGame.UI.RichText
                     {
                         break;
                     }
-                    
                     toFill.PopulateUIVertex(ref vertStart3, startVert);
-                    Bounds bounds = new Bounds(vertStart3.position, Vector3.zero);
                     toFill.PopulateUIVertex(ref vertEnd1, endVert);
-                    bounds.Encapsulate(vertEnd1.position);
-                    Rect rect = new Rect(bounds.min, bounds.size);
-                    //rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), m_Lines[boxStruct.line].height);
+
+                    rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), m_Lines[boxStruct.line].height);
                    // rect.Set(vertStart3.position.x, vertStart3.position.y, Mathf.Abs(vertEnd1.position.x - vertStart3.position.x), Mathf.Abs(vertEnd1.position.y - vertStart3.position.y));
                     hrefInfo.Boxes.Add(rect);
                     DrawLineRect.Add(rect);
+                }
+            }
+        }
 
-//                     Vector3 StartPos = new Vector3(rect.x, rect.y, 0);
-//                     Vector3 EndPos = StartPos + new Vector3(rect.width, 0, 0);
-// 
-//                     AddUnderlineQuad(toFill, underlineVerts,StartPos, EndPos);
-                }
-            }
-        }
-        private void AddUnderlineQuad(VertexHelper _VToFill,IList<UIVertex> underlineVerts, Vector3 startBoxPos, Vector3 endBoxPos)
-        {
-            Vector3[] underlinePos = new Vector3[4];
-            underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
-            underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
-            underlinePos[2] = endBoxPos + new Vector3(0, fontSize  * 0, 0);
-            underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0, 0);
-            for (int i = 0; i < 4; ++i)
-            {
-                int tempVertsIndex = i & 3;
-                _tempVerts[tempVertsIndex] = underlineVerts[i ];
-                _tempVerts[tempVertsIndex].color = Color.blue;
-                _tempVerts[tempVertsIndex].position = underlinePos[i];
-                if (tempVertsIndex == 3)
-                {
-                    _VToFill.AddUIVertexQuad(_tempVerts);
-                }
-            }
-        }
-        //         //添加下划线
-        //         #region 添加下划线
-//        void AddUnderlineQuad(VertexHelper _VToFill, IList<UIVertex> _VTUT, Vector3 _VStartPos, Vector3 _VEndPos)
+//         //添加下划线
+//         private void AddUnderlineQuad(IList<UIVertex> underlineVerts, Vector3 startBoxPos, Vector3 endBoxPos)
 //         {
-//             Vector3[] _TUnderlinePos = new Vector3[4];
-//             _TUnderlinePos[0] = _VStartPos;
-//             _TUnderlinePos[1] = _VEndPos;
-//             _TUnderlinePos[2] = _VEndPos + new Vector3(0f, -1 * fontSize * 0.1f, 0);
-//             _TUnderlinePos[3] = _VStartPos + new Vector3(0f, -1 * fontSize * 0.1f, 0);
+//             Vector3[] underlinePos = new Vector3[4];
+//             underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
+//             underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
+//             underlinePos[2] = endBoxPos + new Vector3(0, fontSize * 0f, 0);
+//             underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0f, 0);
 // 
 //             for (int i = 0; i < 4; ++i)
 //             {
 //                 int tempVertsIndex = i & 3;
-//                 m_TempVerts[tempVertsIndex] = _VTUT[i % 4];
+//                 m_TempVerts[tempVertsIndex] = underlineVerts[i % 4];
 //                 m_TempVerts[tempVertsIndex].color = Color.blue;
-//                 m_TempVerts[tempVertsIndex].position = _TUnderlinePos[i];
-// 
+//                 m_TempVerts[tempVertsIndex].position = underlinePos[i];
 //                 if (tempVertsIndex == 3)
-//                     _VToFill.AddUIVertexQuad(m_TempVerts);
+//                 {
+//                     mVertexHelperRef.AddUIVertexQuad(m_TempVerts);
+//                 }
 //             }
 //         }
-//         #endregion
-
-        //         //添加下划线
-        //         private void AddUnderlineQuad(IList<UIVertex> underlineVerts, Vector3 startBoxPos, Vector3 endBoxPos)
-        //         {
-        //             Vector3[] underlinePos = new Vector3[4];
-        //             underlinePos[0] = startBoxPos + new Vector3(0, fontSize * -0.1f, 0);
-        //             underlinePos[1] = endBoxPos + new Vector3(0, fontSize * -0.1f, 0); ;
-        //             underlinePos[2] = endBoxPos + new Vector3(0, fontSize * 0f, 0);
-        //             underlinePos[3] = startBoxPos + new Vector3(0, fontSize * 0f, 0);
-        // 
-        //             for (int i = 0; i < 4; ++i)
-        //             {
-        //                 int tempVertsIndex = i & 3;
-        //                 m_TempVerts[tempVertsIndex] = underlineVerts[i % 4];
-        //                 m_TempVerts[tempVertsIndex].color = Color.blue;
-        //                 m_TempVerts[tempVertsIndex].position = underlinePos[i];
-        //                 if (tempVertsIndex == 3)
-        //                 {
-        //                     mVertexHelperRef.AddUIVertexQuad(m_TempVerts);
-        //                 }
-        //             }
-        //         }
     }
 
 }
